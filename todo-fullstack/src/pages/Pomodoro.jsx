@@ -298,3 +298,4 @@ function Pomodoro() {
 }
 
 export default Pomodoro;
+// This page is a standalone Pomodoro timer with focus tracking and session history. It features a circular progress indicator, customizable focus durations, and a simple streak counter. The session history is saved in local storage for persistence.
