@@ -1,4 +1,8 @@
-import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import {
+  signInWithRedirect,
+  GoogleAuthProvider,
+  signOut,
+} from "firebase/auth";
 import { auth } from "../firebase/config";
 
 function Auth({ user }) {
@@ -6,7 +10,7 @@ function Auth({ user }) {
 
   const handleLogin = async () => {
     try {
-      await signInWithPopup(auth, provider);
+      await signInWithRedirect(auth, provider);
     } catch (error) {
       console.error("Login error:", error);
     }
@@ -30,7 +34,9 @@ function Auth({ user }) {
           </button>
         </>
       ) : (
-        <button onClick={handleLogin}>Login with Google</button>
+        <button onClick={handleLogin}>
+          Login with Google
+        </button>
       )}
     </div>
   );
