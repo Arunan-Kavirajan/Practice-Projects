@@ -28,7 +28,7 @@ function Login() {
         <button
           onClick={handleLogin}
           className="bg-indigo-600 px-6 py-3 rounded-lg hover:opacity-90 transition"
-        >//s
+        >
           Login with Google
         </button>
       </div>
