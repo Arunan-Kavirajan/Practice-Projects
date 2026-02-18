@@ -1,30 +1,54 @@
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase/config";
+
 import Home from "./pages/Home";
 import Pomodoro from "./pages/Pomodoro";
+import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
+  const [user, setUser] = useState(undefined);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u || null);
+    });
+
+    return () => unsub();
+  }, []);
+
+  if (user === undefined) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0b1220] text-slate-400">
+        Loading...
+      </div>
+    );
+  }
+
   return (
-    <>
-      <nav className="bg-white shadow-sm px-6 py-3 flex justify-between">
-        <Link to="/" className="font-semibold text-gray-800">
-          Task Manager
-        </Link>
+    <Routes>
+      <Route path="/login" element={<Login />} />
 
-        <div className="flex gap-4 text-sm">
-          <Link to="/" className="text-gray-600 hover:text-indigo-600">
-            Tasks
-          </Link>
-          <Link to="/pomodoro" className="text-gray-600 hover:text-indigo-600">
-            Pomodoro
-          </Link>
-        </div>
-      </nav>
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute user={user}>
+            <Home user={user} />
+          </ProtectedRoute>
+        }
+      />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/pomodoro" element={<Pomodoro />} />
-      </Routes>
-    </>
+      <Route
+        path="/pomodoro"
+        element={
+          <ProtectedRoute user={user}>
+            <Pomodoro user={user} />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
   );
 }
 
